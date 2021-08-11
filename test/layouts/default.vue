@@ -53,14 +53,11 @@ export default {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
-  
-      this.$nuxt.$emit('auth', true)
 
-
-      
+      this.auth = true;
     } catch (error) {
-      this.message = 'You are not logged in'
-      this.$nuxt.$emit('auth', false)
+      this.message = "You are not logged in";
+      this.auth = false;
       await this.$router.push("/login");
     }
   },
@@ -75,8 +72,6 @@ export default {
     },
   },
 };
-
-
 </script>
 <style>
 .logo {

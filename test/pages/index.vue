@@ -146,7 +146,7 @@ export default Vue.extend({
         throw new UnauthorizedException();
       }
       this.message = `Bonjour ${content.name}`;
-      this.$nuxt.$emit("auth", true);
+      // this.$nuxt.$emit("auth", true);
     } catch (error) {
       this.message = "You are not logged in";
       this.$nuxt.$emit("auth", false);
