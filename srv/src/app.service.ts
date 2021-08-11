@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
 @Injectable()
-export class AppService {
+export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>
   ) {
@@ -12,6 +12,10 @@ export class AppService {
 
   async create(data: any): Promise<User> {
     return this.userRepository.save(data)
+  }
+
+  async findOne(condition: any): Promise<User> {
+    return this.userRepository.findOne(condition)
   }
 
 }
