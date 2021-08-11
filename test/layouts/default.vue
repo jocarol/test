@@ -54,10 +54,9 @@ export default {
         credentials: "include",
       });
   
-      const content = await response.json();
-  
-      this.message = `Bonjour ${content.name}`
       this.$nuxt.$emit('auth', true)
+
+
       
     } catch (error) {
       this.message = 'You are not logged in'
