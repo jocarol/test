@@ -17,7 +17,7 @@
 
         <!-- Right aligned nav items -->
         <b-navbar-nav class="ml-auto">
-          <b-nav-item-dropdown right>
+          <b-nav-item-dropdown right v-if="auth">
             <!-- Using 'button-content' slot -->
             <template #button-content>Nom d'utilisateur</template>
             <b-dropdown-item>
@@ -35,6 +35,20 @@
 </template>
 
 <script>
+export default {
+  name: "appHeader",
+  data() {
+    return {
+      auth: false,
+    };
+  },
+  mounted() {
+    this.$nuxt.$on("auth", (auth) => {
+      console.log(auth)
+      this.auth = auth;
+    });
+  },
+};
 </script>
 
 <style>
