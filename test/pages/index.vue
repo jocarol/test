@@ -107,7 +107,7 @@ export default Vue.extend({
         title: {
           display: true,
           text: "Répartitions du patrimoine",
-          fontSize: 24,
+          fontSize: 18,
           fontColor: "#6b7280",
         },
         tooltips: {

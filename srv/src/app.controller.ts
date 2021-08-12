@@ -1,8 +1,8 @@
-import { BadRequestException, Body, Controller, Get, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Put, Req, Res, UnauthorizedException } from '@nestjs/common';
 import { UserService } from './app.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt'
-import { Response, Request, response } from 'express';
+import { Response, Request, response, request } from 'express';
 import { resourceLimits } from 'worker_threads';
 
 @Controller('api')
@@ -58,13 +58,13 @@ export class AppController {
     try {
       const cookie = request.cookies['jwt']
 
-      const data = await this.jwtService.verifyAsync(cookie)
+      const cookieData = await this.jwtService.verifyAsync(cookie)
 
-      if (!data) throw new UnauthorizedException();
+      if (!cookieData) throw new UnauthorizedException();
 
-      const user = await this.userService.findOne({ id: data['id'] });
+      const user = await this.userService.findOne({ id: cookieData['id'] });
 
-      const {password, ...userWithoutPassword} = user;
+      const { password, ...userWithoutPassword } = user;
 
       return userWithoutPassword;
     } catch (error) {
@@ -72,10 +72,48 @@ export class AppController {
     }
   }
 
+  @Put('edit')
+  async edit(
+    @Req() request: Request,
+    @Body('phone') phone: any,
+    @Body('email') email: any,
+    @Body('password') password: any,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+
+    if (!phone && !email && !password) return
+
+    const cookie = request.cookies['jwt']
+    const cookieData = await this.jwtService.verifyAsync(cookie)
+
+    if (!cookieData) throw new UnauthorizedException();
+
+    const user = await this.userService.findOne({ id: cookieData['id'] });
+
+    if (!user) throw new BadRequestException('L\'utilisateur n\'existe pas dans la base de donnée')
+
+    let data: any = {}
+    if (phone) {
+      data.phone = phone
+    }
+    if (email) {
+      data.email = email
+    }
+    if (password) {
+      data.password = await bcrypt.hash(password, 12);
+    }
+    console.log(data)
+    const newUser = await this.userService.update(cookieData['id'], data);
+
+    return {
+      newUser
+    };
+  }
+
   @Post('logout')
-  async logout(@Res({passthrough: true}) response: Response) {
+  async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('jwt');
 
-    return {message: "Success"}
+    return { message: "Success" }
   }
 }

@@ -19,13 +19,12 @@
             <b-nav-item v-if="!auth">login</b-nav-item>
             <b-nav-item-dropdown right v-if="auth">
               <!-- Using 'button-content' slot -->
-
               <template #button-content>{{user.name}}</template>
               <b-dropdown-item>
                 <NuxtLink to="profile" class="nav-link">Mon profile</NuxtLink>
               </b-dropdown-item>
               <b-dropdown-item>
-                <NuxtLink to="logout" class="nav-link">Déconnection</NuxtLink>
+                <a class="nav-link" @click="logout">Déconnection</a>
               </b-dropdown-item>
             </b-nav-item-dropdown>
           </b-navbar-nav>
@@ -45,10 +44,20 @@ export default {
       user: {},
     };
   },
+  methods: {
+    async logout() {
+        await fetch("http://localhost:8000/api/logout", {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      await this.$router.push('/login')
+      this.auth = false
+    }
+  },
   mounted() {
     this.$nuxt.$on("auth", (auth) => {
       this.auth = auth;
-      console.log(this.auth)
     });
     this.$nuxt.$on("user", (user) => {
       this.user = user
@@ -88,6 +97,10 @@ body {
   margin: auto;
 }
 
+.profile{
+
+}
+
 .form-signin .checkbox {
   font-weight: 400;
 }
@@ -97,13 +110,11 @@ body {
 }
 
 .form-signin input[type="email"] {
-  margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
 .form-signin input[type="password"] {
-  margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
