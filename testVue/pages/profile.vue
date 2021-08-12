@@ -110,7 +110,7 @@ import Vue from "vue";
 export default Vue.extend({
   data() {
     return {
-      user: {},
+      user: {} as any,
       auth: false,
       phone: "",
       email: "",
