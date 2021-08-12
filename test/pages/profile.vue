@@ -1,5 +1,5 @@
 <template>
-  <div class="container" align="center">
+  <div class="container" align="center" v-if="auth">
     <div class="account-settings">
       <div class="user-profile">
         <div class="user-avatar">
@@ -8,9 +8,9 @@
             alt="Maxwell Admin"
           />
         </div>
-        <h5 class="user-name">User Name</h5>
-        <h6 class="user-email">email@email.com</h6>
-        <h6 class="user-email">+33645887615</h6>
+        <h5 class="user-name">{{user.name}}</h5>
+        <h6 class="user-email">{{user.email}}</h6>
+        <h6 class="user-email">{{user.phone}}</h6>
       </div>
 
       <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
@@ -94,8 +94,38 @@
   </div>
 </template>
 
-<style>
+<script>
 
+export default {
+  data() {
+    return {
+      user: {},
+      auth: false,
+    };
+  },
+  async mounted() {
+    try {
+      const response = await fetch("http://localhost:8000/api/user", {
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      const user = await response.json();
+      this.user = user;
+      console.log(this.user)
+      if (user.statusCode === 401) throw new Error("error");
+      this.$nuxt.$emit("auth", true);
+      this.$nuxt.$emit("user", this.user);
+      this.auth = true;
+    } catch (error) {
+      this.$nuxt.$emit("auth", false);
+      this.$router.push("/login");
+    }
+  },
+};
+</script>
+
+
+<style>
 .account-settings .user-profile {
   margin: 0 0 1rem 0;
   padding-bottom: 1rem;

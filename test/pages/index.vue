@@ -1,29 +1,29 @@
 <template>
-    <div align="center">
-      <h1 align="center">{{ message }} <br /></h1>
-      <br />
+  <div align="center" v-if="auth">
+    <h1 align="center">{{ message }} <br /></h1>
+    <br />
 
-      <div class="row justify-content-md-center">
-        <div class="col-xl-5 col-lg-5 col-md-6 col-sm-6 col-12">
-          <bar-chart
-            :data="barChartData"
-            :options="barChartOptions"
-            :height="200"
-          />
-        </div>
-        <div class="col-xl-5 col-lg-5 col-md-6 col-sm-6 col-12">
-          <bar-chart
-            :data="barChartData"
-            :options="barChartOptions"
-            :height="200"
-          />
-        </div>
+    <div class="row justify-content-md-center">
+      <div class="col-xl-5 col-lg-5 col-md-6 col-sm-6 col-12">
+        <bar-chart
+          :data="barChartData"
+          :options="barChartOptions"
+          :height="200"
+        />
       </div>
-      <div class="contrats col-xl-10 col-lg-10 col-md-6 col-sm-6 col-12">
-        <h2 align="left">Mes contrats</h2>
-        <b-table striped hover :items="items" :fields="fields"></b-table>
+      <div class="col-xl-5 col-lg-5 col-md-6 col-sm-6 col-12">
+        <bar-chart
+          :data="barChartData"
+          :options="barChartOptions"
+          :height="200"
+        />
       </div>
     </div>
+    <div class="contrats col-xl-10 col-lg-10 col-md-6 col-sm-6 col-12">
+      <h2 align="left">Mes contrats</h2>
+      <b-table striped hover :items="items" :fields="fields"></b-table>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -32,6 +32,7 @@ import Vue from "vue";
 export default Vue.extend({
   data() {
     return {
+      auth:false,
       message: "",
       fields: [
         "Nom_du_contrat",
@@ -140,17 +141,18 @@ export default Vue.extend({
         headers: { "Content-Type": "application/json" },
         credentials: "include",
       });
+      const user = await response.json();
 
-      const content = await response.json();
-      if (content.statusCode === 401) {
-        throw new UnauthorizedException();
-      }
-      this.message = `Bonjour ${content.name}`;
-      // this.$nuxt.$emit("auth", true);
+      if (user.statusCode === 401) throw new Error("error");
+      
+      this.message = "Bonjour " + user.name;
+      this.$nuxt.$emit("auth", true);
+      this.$nuxt.$emit("user", user);
+      this.auth = true;
     } catch (error) {
-      this.message = "You are not logged in";
+      this.$router.push("/login");
+      console.log("emit false");
       this.$nuxt.$emit("auth", false);
-      await this.$router.push("/login");
     }
   },
 });

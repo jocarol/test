@@ -56,7 +56,6 @@ export class AppController {
   @Get('user')
   async user(@Req() request: Request) {
     try {
-      console.log(request)
       const cookie = request.cookies['jwt']
 
       const data = await this.jwtService.verifyAsync(cookie)

@@ -13,23 +13,21 @@
         </b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
         <b-collapse id="nav-collapse" is-nav>
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
+            <b-nav-item v-if="!auth">login</b-nav-item>
             <b-nav-item-dropdown right v-if="auth">
               <!-- Using 'button-content' slot -->
-              <template #button-content>Nom d'utilisateur</template>
+
+              <template #button-content>{{user.name}}</template>
               <b-dropdown-item>
                 <NuxtLink to="profile" class="nav-link">Mon profile</NuxtLink>
               </b-dropdown-item>
               <b-dropdown-item>
-                <a class="nav-link" @click="logout">Déconnection</a>
+                <NuxtLink to="logout" class="nav-link">Déconnection</NuxtLink>
               </b-dropdown-item>
             </b-nav-item-dropdown>
-            <b-nav-item v-if="!auth">
-              <NuxtLink to="login" class="nav-link"> Login </NuxtLink>
-            </b-nav-item>
           </b-navbar-nav>
         </b-collapse>
       </b-navbar>
@@ -41,38 +39,24 @@
 <script>
 export default {
   name: "layout",
-  import: "Login",
   data() {
     return {
       auth: false,
+      user: {},
     };
   },
-  async mounted() {
-    try {
-      const response = await fetch("http://localhost:8000/api/user", {
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-
-      this.auth = true;
-    } catch (error) {
-      this.message = "You are not logged in";
-      this.auth = false;
-      await this.$router.push("/login");
-    }
-  },
-  methods: {
-    async logout() {
-      await fetch("http://localhost:8000/api/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-      await this.$router.push("/login");
-    },
+  mounted() {
+    this.$nuxt.$on("auth", (auth) => {
+      this.auth = auth;
+      console.log(this.auth)
+    });
+    this.$nuxt.$on("user", (user) => {
+      this.user = user
+    });
   },
 };
 </script>
+
 <style>
 .logo {
   width: 10rem;
