@@ -1,5 +1,5 @@
 <template>
-  <div align="center" v-if="auth">
+  <div v-if="auth" align="center">
     <h1 align="center">{{ message }} <br /></h1>
     <br />
 
@@ -27,18 +27,18 @@
 </template>
 
 <script>
-import Vue from "vue";
+import Vue from "vue"
 
 export default Vue.extend({
   data() {
     return {
-      auth:false,
+      auth: false,
       message: "",
       fields: [
         "Nom_du_contrat",
         "Solde",
         "Date_de_souscription",
-        "Mensualités",
+        "Mensualités"
       ],
       items: [
         {
@@ -143,15 +143,16 @@ export default Vue.extend({
       });
       const user = await response.json();
 
-      if (user.statusCode === 401) throw new Error("error");
-      
+      if (user.statusCode === 401) {
+        throw new Error("Problème d'authentification")
+      };
+
       this.message = "Bonjour " + user.name;
       this.$nuxt.$emit("auth", true);
       this.$nuxt.$emit("user", user);
       this.auth = true;
     } catch (error) {
       this.$router.push("/login");
-      console.log("emit false");
       this.$nuxt.$emit("auth", false);
     }
   },

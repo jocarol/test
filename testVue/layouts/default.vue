@@ -12,14 +12,14 @@
           </NuxtLink>
         </b-navbar-brand>
 
-        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+        <b-navbar-toggle target="nav-collapse" />
         <b-collapse id="nav-collapse" is-nav>
           <!-- Right aligned nav items -->
           <b-navbar-nav class="ml-auto">
-            <b-nav-item v-if="!auth">login</b-nav-item>
-            <b-nav-item-dropdown right v-if="auth">
+            <b-nav-item v-if="!auth"> login </b-nav-item>
+            <b-nav-item-dropdown v-if="auth" right>
               <!-- Using 'button-content' slot -->
-              <template #button-content>{{user.name}}</template>
+              <template #button-content>{{ user.name }}</template>
               <b-dropdown-item>
                 <NuxtLink to="profile" class="nav-link">Mon profile</NuxtLink>
               </b-dropdown-item>
@@ -44,25 +44,25 @@ export default {
       user: {},
     };
   },
-  methods: {
-    async logout() {
-        await fetch("http://localhost:8000/api/logout", {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-      await this.$router.push('/login')
-      this.auth = false
-    }
-  },
   mounted() {
     this.$nuxt.$on("auth", (auth) => {
       this.auth = auth;
-    });
+    })
     this.$nuxt.$on("user", (user) => {
-      this.user = user
-    });
+      this.user = user;
+    })
   },
+  methods: {
+    async logout() {
+      await fetch("http://localhost:8000/api/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      await this.$router.push("/login")
+      this.auth = false
+    },
+  }
 };
 </script>
 
@@ -87,7 +87,7 @@ body {
 }
 
 .container {
-  padding-top: 5rem;
+  padding-top: 4rem;
 }
 
 .form-signin {
@@ -95,10 +95,6 @@ body {
   max-width: 330px;
   padding: 15px;
   margin: auto;
-}
-
-.profile{
-
 }
 
 .form-signin .checkbox {

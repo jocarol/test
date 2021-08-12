@@ -1,5 +1,6 @@
 <template>
   <div class="container" align="center" v-if="auth">
+    <h1 class="title">Mon profile</h1>
     <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
       <div class="account-settings">
         <div class="user-profile">
@@ -131,8 +132,9 @@ export default Vue.extend({
         });
         this.user.email = this.email || this.user.email;
         this.user.phone = this.phone || this.user.phone;
+        alert("Utilisateur mis à jour");
       } catch (error) {
-        console.error("Erreur lors de la requête");
+        alert("Erreur lors de la requête");
       }
     },
   },
@@ -160,9 +162,13 @@ export default Vue.extend({
 
 
 <style>
+.title {
+  margin-bottom: 3rem;
+}
 .form-signin {
   margin-top: 0rem !important;
 }
+
 .account-settings .user-profile {
   margin: 0 0 1rem 0;
   padding-bottom: 1rem;

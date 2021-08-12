@@ -1,17 +1,25 @@
-import { BadRequestException, Body, Controller, Get, Post, Put, Req, Res, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from './app.service';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt'
-import { Response, Request, response, request } from 'express';
-import { resourceLimits } from 'worker_threads';
+import { JwtService } from '@nestjs/jwt';
+import { Response, Request } from 'express';
 
 @Controller('api')
 export class AppController {
   constructor(
     private readonly userService: UserService,
-    private jwtService: JwtService
-  ) {
-  }
+    private jwtService: JwtService,
+  ) { }
 
   @Post('register')
   async register(
@@ -27,11 +35,11 @@ export class AppController {
       email,
       password: hashedPassword,
       phone,
-    })
+    });
 
-    delete user.password
+    delete user.password;
 
-    return user
+    return user;
   }
 
   @Post('login')
@@ -40,30 +48,32 @@ export class AppController {
     @Body('password') password: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const user = await this.userService.findOne({ email })
+    const user = await this.userService.findOne({ email });
 
-    if (!user) throw new BadRequestException('L\'utilisateur n\'existe pas dans la base de donnée')
-    if (!await bcrypt.compare(password, user.password)) throw new BadRequestException('Identifiants incorrects')
-    const jwt = await this.jwtService.signAsync({ id: user.id })
+    if (!user)
+      throw new BadRequestException(
+        "L'utilisateur n'existe pas dans la base de donnée",
+      );
+    if (!(await bcrypt.compare(password, user.password)))
+      throw new BadRequestException('Identifiants incorrects');
+    const jwt = await this.jwtService.signAsync({ id: user.id });
 
     response.cookie('jwt', jwt, { httpOnly: true });
 
     return {
-      message: "Succes"
+      message: 'Succes',
     };
   }
 
   @Get('user')
   async user(@Req() request: Request) {
     try {
-      const cookie = request.cookies['jwt']
-
-      const cookieData = await this.jwtService.verifyAsync(cookie)
+      const cookie = request.cookies['jwt'];
+      const cookieData = await this.jwtService.verifyAsync(cookie);
 
       if (!cookieData) throw new UnauthorizedException();
 
       const user = await this.userService.findOne({ id: cookieData['id'] });
-
       const { password, ...userWithoutPassword } = user;
 
       return userWithoutPassword;
@@ -78,35 +88,37 @@ export class AppController {
     @Body('phone') phone: any,
     @Body('email') email: any,
     @Body('password') password: any,
-    @Res({ passthrough: true }) response: Response,
   ) {
+    if (!phone && !email && !password) return;
 
-    if (!phone && !email && !password) return
-
-    const cookie = request.cookies['jwt']
-    const cookieData = await this.jwtService.verifyAsync(cookie)
+    const cookie = request.cookies['jwt'];
+    const cookieData = await this.jwtService.verifyAsync(cookie);
 
     if (!cookieData) throw new UnauthorizedException();
 
     const user = await this.userService.findOne({ id: cookieData['id'] });
 
-    if (!user) throw new BadRequestException('L\'utilisateur n\'existe pas dans la base de donnée')
+    if (!user)
+      throw new BadRequestException(
+        "L'utilisateur n'existe pas dans la base de donnée",
+      );
 
-    let data: any = {}
+    const data: any = {};
+
     if (phone) {
-      data.phone = phone
+      data.phone = phone;
     }
     if (email) {
-      data.email = email
+      data.email = email;
     }
     if (password) {
       data.password = await bcrypt.hash(password, 12);
     }
-    console.log(data)
+
     const newUser = await this.userService.update(cookieData['id'], data);
 
     return {
-      newUser
+      newUser,
     };
   }
 
@@ -114,6 +126,6 @@ export class AppController {
   async logout(@Res({ passthrough: true }) response: Response) {
     response.clearCookie('jwt');
 
-    return { message: "Success" }
+    return { message: 'Success' };
   }
 }
