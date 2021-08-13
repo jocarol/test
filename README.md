@@ -24,7 +24,7 @@ Puis :
   password VARCHAR(200) NOT NULL
 );
 
-```INSERT INTO test VALUES ('Admin', 'admin@charon.com', '07.86.66.44.12', '$2b$12$xGFoK6.B8RL4AzZNF0.z3O.FvSjYMkSfsNjXxH8BgchRFv/OF9vLy');```
+```INSERT INTO users VALUES ('Admin', 'admin@charon.com', '07.86.66.44.12', '$2b$12$xGFoK6.B8RL4AzZNF0.z3O.FvSjYMkSfsNjXxH8BgchRFv/OF9vLy');```
 
 ## Setup le front
 Se rendre dans le dossier testVue et entrer 'yarn install' puis 'yarn run start:dev'
