@@ -27,14 +27,22 @@ Puis :
   password VARCHAR(200) NOT NULL
 );
 
-```INSERT INTO users VALUES ('1', 'Admin', 'admin@charon.com', '07.86.66.44.12', '$2b$12$xGFoK6.B8RL4AzZNF0.z3O.FvSjYMkSfsNjXxH8BgchRFv/OF9vLy');```
-
 ## Setup le front
 Se rendre dans le dossier testVue et entrer 'yarn install' puis 'yarn run start:dev'
 
 ## Setup le back
 Se rendre dans le dossier srv et entrer 'yarn install' puis 'yarn run start:dev'
 
+## Créer un user
+Faire une requête à l'URL : http://localhost:8000/api/register avec en body (raw / json) les informations requises.
+Exemple : 
+
+{
+    "name": "Admin",
+    "email": "admin@charon.com",
+    "password": "password",
+    "phone": "654654654"
+}
 
 ## Run
 Se rendre à localhost:3000/
