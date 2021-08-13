@@ -1,4 +1,4 @@
-# Test technique
+# Test technique Vue.js / Nuxt.js / Nest.js
 ## Setup Postgers & Docker:
 Pull la derniere image de PostgreSQL sur serveur Alpine :
 ```docker pull postgres:alpine```
