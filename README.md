@@ -28,7 +28,7 @@ Puis :
 );
 
 ## Setup le front
-Se rendre dans le dossier testVue et entrer 'yarn install' puis 'yarn run start:dev'
+Se rendre dans le dossier testVue et entrer 'yarn install' puis 'yarn dev'
 
 ## Setup le back
 Se rendre dans le dossier srv et entrer 'yarn install' puis 'yarn run start:dev'
