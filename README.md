@@ -45,5 +45,4 @@ Exemple :
 }
 
 ## Run
-Se rendre à localhost:3000/
-Renseigner le couple admin:password
+Se rendre à localhost:3000 et se logger avec le couple email:password que vous venez de créer 
