@@ -1,6 +1,6 @@
 <template>
   <div class="container" align="center" v-if="auth">
-    <h1 class="title">Mon profile</h1>
+    <h1 class="title">Mon profil</h1>
     <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
       <div class="account-settings">
         <div class="user-profile">
